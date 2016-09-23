@@ -33,12 +33,71 @@
 
 		function testHotspot () {
 			var h = krShell.addHotspot('test');
-			h.addPoint({ath: 10, atv: 10});
-			h.addPoint({ath: 10, atv: -10});
-			h.addPoint({ath: -10, atv: -10});
-			h.addPoint({ath: -10, atv: 10});
+			//h.addPoint({ath: 10, atv: 10});
+			//h.addPoint({ath: 10, atv: -10});
+			//h.addPoint({ath: -10, atv: -10});
+			//h.addPoint({ath: -10, atv: 10});
+
+			h.url = 'hotspot.png';
+			h.ath = 0;
+			h.atv = 0;
+
+			/*h.on('down', function (event) {
+				//var center = krShell.krpano.spheretoscreen(this.ath, this.atv);
+				//var targetX = event.stagex - center.x;
+				//var targetY = event.stagey - center.y;
+				console.log(this.pressed);
+				krShell.krpano.actions.asyncloop(this.pressed, 'trace("drag")', 'trace("done")')
+			});*/
+
 			return h;
 		}
+
+		function drag () {
+
+		}
+
+		function asyncLoop (condition, handler, doneHandler) {
+			function loop () {
+				if (condition()) {
+					handler && handler();
+					requestAnimationFrame(loop);
+				} else {
+					doneHandler && doneHandler();
+				}
+				// krShell.krpano.actions.updatescreen();
+			}
+
+			loop();
+		}
+
+		function testAsyncLoop () {
+			var h = testHotspot();
+
+			h.on('down', function (event) {
+				var center = krShell.krpano.spheretoscreen(h.ath, h.atv);
+				var targetX = event.stagex - center.x;
+				var targetY = event.stagey - center.y;
+
+				krShell.asyncLoop(function () {
+					return h.pressed;
+				}, function () {
+					var x = event.stagex - targetX;
+					var y = event.stagey - targetY;
+					var result = krShell.krpano.screentosphere(x, y);
+					h.ath = result.x;
+					h.atv = result.y;
+				})
+			});
+
+			return h;
+		}
+
+		var h;
+		setTimeout(function () {
+			h = testAsyncLoop();
+		}, 1000)
+
 	</script>
 </div>
 

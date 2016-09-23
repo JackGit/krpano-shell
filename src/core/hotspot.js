@@ -32,9 +32,11 @@ export default function (krShell) {
         };
 
         prototype.off = function (event, handler) {
-            this.__eventHandlers = this.__eventHandlers.filter(function (h) {
-                return handler !== h;
-            });
+            if (this.__eventHandlers[event]) {
+                this.__eventHandlers[event] = this.__eventHandlers[event].filter(function (h) {
+                    return handler !== h;
+                });
+            }
         };
 
         prototype.addPoint = function (point) {
@@ -63,9 +65,8 @@ export default function (krShell) {
         };
     }
 
-    krShell.addHotspot = function (name, options) {
+    krShell.addHotspot = function (name) {
         let hotspot = krpano.addhotspot(name);
-
         return hotspot;
     };
 
