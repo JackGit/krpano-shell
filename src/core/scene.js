@@ -1,34 +1,39 @@
-/**
- * scene = {
- *  name: 'scene1',
- *  preview: {
- *      type: '',
- *      url: '',
- *      stripOrder: '',
- *      details: ''
- *  },
- *  view: {
- *      lookAtH: '',
- *      lookAtV: '',
- *      fov: '',
- *      fovMin: '',
- *      fovMax: '',
- *      maxPixelZoom: ''
- *  },
- *  image: {}
- * };
- * @param krShell
- */
+import { Preview } from './preview';
+import { View } from './view';
 
-const PREVIEW_TYPE = {
-    'SPHERE': 'SPHERE',
-    'CYLINDER': 'CYLINDER',
-    'CUBESTRIP': 'CUBESTRIP'
+const DEFAULT_SCENE_OPTIONS = {
+    preview: new Preview({type: Preview.TYPE.grid()}),
+    view: new View()
 };
+
+class Scene {
+
+    constructor (name, options) {
+        this.name = name;
+
+        Object.assign(this, DEFAULT_SCENE_OPTIONS, options)
+
+        this.sceneElement = krShell.createScene(name);
+    }
+
+    _setContent () {
+        this.sceneElement.content = '';
+        ['preview', 'view'].forEach(attr => {
+            this.sceneElement.content += this[attr].toString();
+        });
+    }
+
+    load () {
+        this._setContent();
+        krShell.loadScene(this.name);
+    }
+}
 
 export default function (krShell) {
 
     var krpano = krShell.krpano;
+
+    krShell.Scene = Scene;
 
     krShell.loadScene = function () {
         krpano.actions.loadscene.apply(krpano, arguments);
@@ -36,5 +41,13 @@ export default function (krShell) {
 
     krShell.createScene = function (name) {
         return krpano.scene.createItem(name);
+    };
+
+    krShell.getScene = function (indexOrName) {
+        if (indexOrName) {
+            return krpano.scene.getItem(indexOrName);
+        } else {
+            return krpano.scene.getArray();
+        }
     };
 }

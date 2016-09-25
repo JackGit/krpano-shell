@@ -1,5 +1,7 @@
 ﻿<krpano>
 
+	<!--<plugin name="shell" url="shell.js"></plugin>
+	<plugin name="testplugin" url="test-plugin.js" align="center" onclick="dosomething(hello,plugin)"></plugin>-->
 	<!-- grid preview pano -->
 	<preview type="grid(cube,64,64,512,0xCCCCCC,0xF6F6F6,0x999999);" />
 
@@ -8,8 +10,7 @@
 
 	<!-- 注册shell需要使用的变量和函数 -->
 	<action type="javascript" name="register_shell" autorun="preinit"><![CDATA[
-		window.krShell.krpano = krpano;
-		window.krShell.resolve = resolve;
+		krShell.init(krpano, resolve);
 	]]></action>
 
 	<action name="draghotspot"><![CDATA[
@@ -39,6 +40,7 @@
 	</scene>
 
 	<scene name="scene_1197790" pano_id="1197790">
+		<view hlookat="0" vlookat="0" fovtype="MFOV" fov="90" fovmin="20" fovmax="120" />
 		<preview url="http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/preview.jpg"/>
 		<image type="CUBE" multires="true" tilesize="512" if="!webvr.isenabled AND device.desktop">
 			<level tiledimagewidth="3820" tiledimageheight="3820">

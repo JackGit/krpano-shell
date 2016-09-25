@@ -27,10 +27,6 @@
 	<script>
 		embedpano({swf:"krpano.swf", xml:"krpano.xml", target:"pano", html5:"auto", mobilescale:1.0, passQueryParameters:true});
 
-		setTimeout(function () {
-			krShell.init();
-		}, 100);
-
 		function testHotspot () {
 			var h = krShell.addHotspot('test');
 			//h.addPoint({ath: 10, atv: 10});
@@ -95,7 +91,14 @@
 
 		var h;
 		setTimeout(function () {
+			var ss = ['scene_1197790', 'scene1'];
 			h = testAsyncLoop();
+			h.keep = true;
+			h.on('click', function () {
+				var s = ss.shift();
+				ss.push(s);
+				krShell.loadScene(s);
+			});
 		}, 1000)
 
 	</script>
