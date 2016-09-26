@@ -1,3 +1,4 @@
+import { createElement } from 'src/utils/xml';
 
 const DEFAULT_PREVIEW_OPTIONS = {
     type: '',
@@ -19,16 +20,9 @@ export class Preview {
      * @returns {string}
      */
     toString () {
-        let preview = document.createElement('preview');
-        let xml = '';
-
-        Object.keys(DEFAULT_PREVIEW_OPTIONS).forEach(attr => {
-            preview.setAttribute(attr.toLowerCase(), this[attr]);
-        });
-
-        xml = preview.outerHTML;
+        let preview = createElement('preview', this);
+        let xml = preview.outerHTML;
         preview = null;
-
         return xml;
     }
 }

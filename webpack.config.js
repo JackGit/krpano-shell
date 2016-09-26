@@ -8,7 +8,7 @@ module.exports = {
     },
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, './dist'),            // generated files will be put here: js, css, images ...
+        path: path.resolve(__dirname, './dist')            // generated files will be put here: js, css, images ...
     },
     // devtool: 'source-map',
     resolve: {

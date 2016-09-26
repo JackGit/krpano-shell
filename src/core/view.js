@@ -1,3 +1,5 @@
+import { createElement } from 'src/utils/xml';
+
 const LIMIT_VIEW_TYPE = {
     OFF: 'off',
     AUTO: 'auto',
@@ -44,16 +46,9 @@ export class View {
     }
 
     toString () {
-        let view = document.createElement('view');
-        let xml = '';
-
-        Object.keys(DEFAULT_VIEW_OPTIONS).forEach(attr => {
-            view.setAttribute(attr.toLowerCase(), this[attr]);
-        });
-
-        xml = view.outerHTML;
+        let view = createElement('view', this);
+        let xml = view.outerHTML;
         view = null;
-
         return xml;
     }
 }

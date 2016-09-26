@@ -101,6 +101,48 @@
 			});
 		}, 1000)
 
+
+		function testImage () {
+			var image = new krShell.Image({
+				type: 'CUBE',
+				url: 'http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/mobile_%s.jpg',
+				preAlign: 'X|Y|Z',
+				multires: false,
+				progressive: true,
+				levels: [{
+					tiledImageWidth: 512,
+					tiledImageHeight: 512,
+					tileSize: 512,
+					asPreview: false,
+					url: 'level1.jpg'
+				}, {
+					tiledImageWidth: 214,
+					tiledImageHeight: 214,
+					tileSize: 214,
+					asPreview: true,
+					url: 'level2.jpg'
+				}]
+			});
+
+			var s = new krShell.Scene('test', {
+				image: image
+			});
+
+			return s;
+		}
+
+		function test () {
+			var image = new krShell.Image({
+				type: 'SPHERE',
+				url: 'http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/mobile_%s.jpg'
+			});
+
+			var s = new krShell.Scene('test', {
+				image: image
+			});
+
+			return s;
+		}
 	</script>
 </div>
 

@@ -1,9 +1,12 @@
+import { createElement } from 'src/utils/xml';
 import { Preview } from './preview';
 import { View } from './view';
+import { Image } from './image';
 
 const DEFAULT_SCENE_OPTIONS = {
     preview: new Preview({type: Preview.TYPE.grid()}),
-    view: new View()
+    view: new View(),
+    image: null
 };
 
 class Scene {
@@ -11,15 +14,17 @@ class Scene {
     constructor (name, options) {
         this.name = name;
 
-        Object.assign(this, DEFAULT_SCENE_OPTIONS, options)
+        Object.assign(this, DEFAULT_SCENE_OPTIONS, options);
 
         this.sceneElement = krShell.createScene(name);
     }
 
     _setContent () {
         this.sceneElement.content = '';
-        ['preview', 'view'].forEach(attr => {
-            this.sceneElement.content += this[attr].toString();
+        ['preview', 'view', 'image'].forEach(attr => {
+            if (this[attr]) {
+                this.sceneElement.content += this[attr].toString();
+            }
         });
     }
 
