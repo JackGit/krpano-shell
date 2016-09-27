@@ -1,7 +1,5 @@
-import { createElement } from 'src/utils/xml';
 import { Preview } from './preview';
 import { View } from './view';
-import { Image } from './image';
 
 const DEFAULT_SCENE_OPTIONS = {
     preview: new Preview({type: Preview.TYPE.grid()}),

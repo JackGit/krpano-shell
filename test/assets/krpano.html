@@ -103,7 +103,7 @@
 
 
 		function testImage () {
-			var image = new krShell.Image({
+			var image = new krShell.CubeImage({
 				type: 'CUBE',
 				url: 'http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/mobile_%s.jpg',
 				preAlign: 'X|Y|Z',
@@ -132,12 +132,14 @@
 		}
 
 		function test () {
-			var image = new krShell.Image({
-				type: 'SPHERE',
+			var image = new krShell.CubeImage({
 				url: 'http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/mobile_%s.jpg'
 			});
-
+			var preview = new krShell.Preview({
+				url: 'http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/preview.jpg'
+			});
 			var s = new krShell.Scene('test', {
+				preview: preview,
 				image: image
 			});
 

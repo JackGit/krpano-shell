@@ -1,81 +1,49 @@
 import { createElement } from 'src/utils/xml';
 import { hasVal } from 'src/utils/lang';
 
-/**
- *
- * CUBE, SPHERE and CYLINDER can be multires
- * FISHEYE and CUBESTRIP can'be multires
- * FLAT is a special CYLINDER with hFov = 1.0
- *
- * features:
- *      different image types
- *      multires support
- *      stereo support
- */
-
+// default values
 const DEFAULT_IMAGE_OPTIONS = {
     type: '',
-    multires: false,
-    preAlign: '',
-    stereo: false
+    preAlign: ''
 };
-
 const DEFAULT_STEREO_OPTIONS = {
-    stereo: true,
+    stereo: false,
     stereoLabels: '1|2',
     stereoFormat: 'TB'
 };
-
 const DEFAULT_MULTIRES_OPTIONS = {
-    multires: true,
+    multires: false,
     multiresThreshold: .025,
     tileSize: '',
     baseIndex: 1,
     progressive: false
-    // levels: [] // {tiledImageWidth, tiledImageHeight, tileSize, asPreview, url}
 };
-
 const DEFAULT_CUBE_OPTIONS = {
     type: 'CUBE',
     url: '',
-    cubeLabels: 'l|f|r|b|u|d',
-    preAlign: ''
+    cubeLabels: 'l|f|r|b|u|d'
 };
-
 const DEFAULT_CUBESTRIP_OPTIONS = {
     type: 'CUBESTRIP',
     url: ''
 };
-
 const DEFAULT_SPHERE_OPTIONS = {
     type: 'SPHERE',
-    hFov: '360',
+    hFov: 360,
     vFov: '',
     vOffset: 0,
-    preAlign: '',
     url: '',
     mapping: '',
     mJpegStream: ''
 };
-
 const DEFAULT_CYLINDER_OPTIONS = {
     type: 'CYLINDER',
     hFov: 360,
     vFov: '',
     vOffset: 0,
-    preAlign: '',
     url: '',
     mJpegStream: ''
 };
-
-const DEFAULT_FLAT_OPTIONS = {
-    type: 'CYLINDER',
-    hFov: 1.0,
-    preAlign: '',
-    url: '',
-    mJpegStream: ''
-};
-
 const DEFAULT_FISHEYE_OPTIONS = {
     url: '',
     fov: 180.0,
@@ -85,220 +53,169 @@ const DEFAULT_FISHEYE_OPTIONS = {
     mJpegStream: ''
 };
 
-const IMAGE_TYPE = {
-    CUBE: 'CUBE',
-    CUBESTRIP: 'CUBESTRIP',
-    SPHERE: 'SPHERE',
-    CYLINDER: 'CYLINDER',
-    FISHEYE: 'FISHEYE',
-    FLAT: 'FLAT'
-};
+// available attributes
+const AVAILABLE_IMAGE_ATTRS = [
+    'type', 'preAlign',
+    'multires', 'multiresThreshold', 'progressive', 'tileSize', 'baseIndex',
+    'hFov', 'vFov', 'vOffset',
+    'stereo', 'stereoLabels', 'stereoFormat',
+    'cubeLabels'
+];
+const AVAILABLE_LEVEL_ATTRS = ['tiledImageWidth', 'tiledImageHeight', 'tileSize', 'asPreview'];
+const AVAILABLE_CUBE_ATTRS = ['url'];
+const AVAILABLE_CUESTRIP_ATTRS = ['url'];
+const AVAILABLE_SPHERE_ATTRS = ['url', 'mJpegStream', 'mapping'];
+const AVAILABLE_CYLINDER_ATTRS = ['url', 'mJpegStream'];
+const AVAILABLE_FISHEYE_ATTRS = ['url', 'mJpegStream', 'fov', 'align', 'crop', 'lenScp'];
 
-const defs = {
-    /* cube definition */
-    cube: {
-        setParams () {
-            let options = this._options;
-            let mergeItems = [this, DEFAULT_IMAGE_OPTIONS, DEFAULT_CUBE_OPTIONS];
-
-            if (options.multires) {
-                mergeItems.push(DEFAULT_MULTIRES_OPTIONS);
-            }
-
-            mergeItems.push(options);
-            Object.assign.apply(Object, mergeItems);
-        },
-
-        createCube (url) {
-            return createElement('cube', {url: url});
-        },
-
-        toString () {
-            let image = this.createImage();
-
-            if (this.multires && this.levels) {
-                this.levels.forEach(levelAttrs => {
-                    let level = this.createLevel(levelAttrs);
-                    let cube = this.createCube(levelAttrs.url);
-                    level.appendChild(cube);
-                    image.appendChild(level);
-                });
-            } else {
-                let cube = this.createCube(this.url);
-                image.appendChild(cube);
-            }
-
-            return image.outerHTML;
-        }
-    },
-
-    /* cubestrip definition */
-    cubestrip: {
-        setParams () {
-            let options = this._options;
-            Object.assign(this, DEFAULT_IMAGE_OPTIONS, DEFAULT_CUBESTRIP_OPTIONS, options);
-        },
-
-        createCubeStrip (url) {
-            return createElement('cubestrip', {url: url});
-        },
-
-        toString () {
-            let image = this.createImage();
-            let cubeStrip = this.createCubeStrip(this.url);
-
-            image.appendChild(cubeStrip);
-            return image.outerHTML;
-        }
-    },
-
-    /* sphere definition */
-    sphere: {
-        setParams () {
-            let options = this._options;
-            let mergeItems = [this, DEFAULT_IMAGE_OPTIONS, DEFAULT_SPHERE_OPTIONS];
-
-            if (options.multires) {
-                mergeItems.push(DEFAULT_MULTIRES_OPTIONS);
-            }
-
-            mergeItems.push(options);
-            Object.assign.apply(Object, mergeItems);
-        },
-
-        createSphere (url) {
-            return createElement('sphere', {url: url});
-        },
-
-        toString () {
-            let image = this.createImage();
-
-            if (this.multires && this.levels) {
-                this.levels.forEach(levelAttrs => {
-                    let level = this.createLevel(levelAttrs);
-                    let sphere = this.createSphere(levelAttrs.url);
-                    level.appendChild(sphere);
-                    image.appendChild(level);
-                });
-            } else {
-                let sphere = this.createSphere(this.url);
-                image.appendChild(sphere);
-            }
-
-            return image.outerHTML;
-        }
-    },
-    cylinder: {},
-    fisheye: {},
-    flat: {}
-};
-
-
-export class Image {
-
+// different image classes
+export class CubeImage {
     constructor (options) {
-        this._options = options;
-        this._imageAttrs = [DEFAULT_IMAGE_OPTIONS];
-
-        Object.assign(this, defs[options.type.toLowerCase()]);
-
-        // set image attrs
-        if (this.stereo) {
-            this._imageAttrs.push(DEFAULT_STEREO_OPTIONS);
-        }
-        if (this.multires) {
-            this._imageAttrs.push(DEFAULT_MULTIRES_OPTIONS);
-        }
-
-        this.setParams();
+        Object.assign(
+            this,
+            DEFAULT_IMAGE_OPTIONS,
+            options.multires ? DEFAULT_MULTIRES_OPTIONS : {},
+            options.stereo ? DEFAULT_STEREO_OPTIONS : {},
+            DEFAULT_CUBE_OPTIONS,
+            options
+        );
     }
 
-    createImage () {
-        let imageAttrs = {};
-        let imageOptions = [DEFAULT_IMAGE_OPTIONS];
+    toString () {
+        let image = createElement('image', this, AVAILABLE_IMAGE_ATTRS);
 
-        if (this.stereo) {
-            imageOptions.push(DEFAULT_STEREO_OPTIONS);
+        if (this.multires && this.levels) {
+            this.levels.forEach(levelOptions => {
+                let level = createElement('level', levelOptions, AVAILABLE_LEVEL_ATTRS);
+                let cube = createElement('cube', levelOptions, AVAILABLE_CUBE_ATTRS);
+                level.appendChild(cube);
+                image.appendChild(level);
+            });
+        } else {
+            let cube = createElement('cube', this, AVAILABLE_CUBE_ATTRS);
+            image.appendChild(cube);
         }
-        if (this.multires) {
-            imageOptions.push(DEFAULT_MULTIRES_OPTIONS);
-        }
 
-        imageOptions = Object.assign.apply(Object, imageOptions);
-        Object.keys(imageOptions).forEach(attr => {
-            imageAttrs[attr] = this[attr];
-        });
-
-        return createElement('image', imageAttrs);
-    }
-
-    createLevel (options) {
-        let levelAttrs = {};
-        let level;
-
-        ['tiledImageWidth', 'tiledImageHeight', 'tileSize', 'asPreview'].forEach(attr => {
-            levelAttrs[attr] = options[attr];
-        });
-
-        level = createElement('level', levelAttrs);
-        return level;
+        return image.outerHTML;
     }
 }
 
+export class CubeStripImage {
+    constructor (options) {
+        Object.assign(
+            this,
+            DEFAULT_IMAGE_OPTIONS,
+            // options.multires ? DEFAULT_MULTIRES_OPTIONS : {},
+            options.stereo ? DEFAULT_STEREO_OPTIONS : {},
+            DEFAULT_CUBESTRIP_OPTIONS,
+            options
+        );
+    }
 
-// image.type
-// cubstrip.url
-export class CubeStrip {
-
+    toString () {
+        let image = createElement('image', this, AVAILABLE_IMAGE_ATTRS);
+        let cubestrip = createElement('cubestrip', this, AVAILABLE_CUESTRIP_ATTRS);
+        image.appendChild(cubestrip);
+        return image.outerHTML;
+    }
 }
 
-// image.type
-// image.hFov
-// image.vFov
-// image.vOffset
-// image.preAlign
-// sphere.url
-// sphere.mapping
-// sphere.mJpegStream
+export class SphereImage {
+    constructor (options) {
+        Object.assign(
+            this,
+            DEFAULT_IMAGE_OPTIONS,
+            options.multires ? DEFAULT_MULTIRES_OPTIONS : {},
+            options.stereo ? DEFAULT_STEREO_OPTIONS : {},
+            DEFAULT_SPHERE_OPTIONS,
+            options
+        );
+    }
 
-// mul
-// same as Cube
-export class Sphere {
+    toString () {
+        let image = createElement('image', this, AVAILABLE_IMAGE_ATTRS);
 
+        if (this.multires && this.levels) {
+            this.levels.forEach(levelOptions => {
+                let level = createElement('level', levelOptions, AVAILABLE_LEVEL_ATTRS);
+                let sphere = createElement('sphere', levelOptions, AVAILABLE_SPHERE_ATTRS);
+                level.appendChild(sphere);
+                image.appendChild(level);
+            });
+        } else {
+            let sphere = createElement('sphere', this, AVAILABLE_SPHERE_ATTRS);
+            image.appendChild(sphere);
+        }
+
+        return image.outerHTML;
+    }
 }
 
-// image.type
-// image.hFov
-// image.vFov
-// image.vOffset
-// image.preAlign
-// cylinder.url
-// cylinder.mJpegStream
+export class CylinderImage {
+    constructor (options) {
+        Object.assign(
+            this,
+            DEFAULT_IMAGE_OPTIONS,
+            options.multires ? DEFAULT_MULTIRES_OPTIONS : {},
+            options.stereo ? DEFAULT_STEREO_OPTIONS : {},
+            DEFAULT_CYLINDER_OPTIONS,
+            options
+        );
+    }
 
-// mul
-// same as Cube
-export class Cylinder { /* Flat */
+    toString () {
+        let image = createElement('image', this, AVAILABLE_IMAGE_ATTRS);
 
+        if (this.multires && this.levels) {
+            this.levels.forEach(levelOptions => {
+                let level = createElement('level', levelOptions, AVAILABLE_LEVEL_ATTRS);
+                let cylinder = createElement('cylinder', levelOptions, AVAILABLE_CYLINDER_ATTRS);
+                level.appendChild(cylinder);
+                image.appendChild(level);
+            });
+        } else {
+            let cylinder = createElement('cylinder', this, AVAILABLE_CYLINDER_ATTRS);
+            image.appendChild(cylinder);
+        }
+
+        return image.outerHTML;
+    }
 }
 
-// fishEye.url
-// fishEye.fov
-// fishEye.align
-// fishEye.crop
-// fishEye.lenScp
-// fishEye.mJpegStream
-export class FishEye {
+export class FishEyeImage {
+    constructor (options) {
+        Object.assign(
+            this,
+            DEFAULT_IMAGE_OPTIONS,
+            // options.multires ? DEFAULT_MULTIRES_OPTIONS : {},
+            options.stereo ? DEFAULT_STEREO_OPTIONS : {},
+            DEFAULT_FISHEYE_OPTIONS,
+            options
+        );
+    }
 
+    toString () {
+        let image = createElement('image', this, AVAILABLE_IMAGE_ATTRS);
+        let fisheye = createElement('fisheye', this, AVAILABLE_FISHEYE_ATTRS);
+        image.appendChild(fisheye);
+        return image.outerHTML;
+    }
 }
 
-// tiledImageWidth
-// tiledImageHeight
-// tileSize
-// asPreview
-export class Level {
+export class VideoImage {
+    constructor () {
 
+    }
+
+    toString () {
+
+    }
 }
 
 export default function (krShell) {
-    krShell.Image = Image;
+    krShell.CubeImage = CubeImage;
+    krShell.CubeStripImage = CubeStripImage;
+    krShell.SphereImage = SphereImage;
+    krShell.CylinderImage = CylinderImage;
+    krShell.FishEyeImage = FishEyeImage;
 }

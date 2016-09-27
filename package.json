@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "unit-test": "mocha --compilers js:babel-register ./test/unit/**/*.js"
+    "unit": "mocha --compilers js:babel-register ./test/unit/**/*.js",
+    "cover": ""
   },
   "author": "",
   "license": "ISC",
