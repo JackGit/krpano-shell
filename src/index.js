@@ -13,8 +13,6 @@ global.krShell = {
 
     init: function (krpanoInterfaceObj, resolve) {
 
-        console.log('krShell.init()');
-
         this.krpano = krpanoInterfaceObj;
         this.resolve = resolve;
 

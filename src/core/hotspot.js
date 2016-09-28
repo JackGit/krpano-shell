@@ -1,6 +1,135 @@
+const KEY_MAPPING = {
+    name: 'name',
+    type: 'type',
+    url: 'url',
+    keep: 'keep',
+    renderer: 'renderer',
+    visible: 'visible',
+    enabled: 'enabled',
+    handcursor: 'handCursor',
+    maskchildren: 'maskChildren',
+    zorder: 'zOrder',
+    zorder2: 'zOrder2',
+    capture: 'capture',
+    children: 'children',
+    // blendmode: 'blendMode', // flash only
+    style: 'style',
+    ath: 'ath',
+    atv: 'atv',
+    edge: 'edge',
+    ox: 'ox',
+    oy: 'oy',
+    zoom: 'zoom',
+    distorted: 'distorted',
+    rx: 'rx',
+    ry: 'ry',
+    rz: 'rz',
+    // details: 'details',
+    inverserotation: 'inverseRotation',
+    flying: 'flying',
+    width: 'width',
+    height: 'height',
+    scale: 'scale',
+    rotate: 'rotate',
+    // pixelhittest: 'pixelHitTest', // flash only
+    smoothing: 'smoothing',
+    accuracy: 'accuracy',
+    alpha: 'alpha',
+    autoalpha: 'autoAlpha',
+    // usecontentsize: 'useContentSize', // flash only
+    scale9grid: 'scale9grid',
+    stereo: 'stereo',
+    crop: 'crop',
+    scalechildren: 'scaleChildren',
+    // mask: 'mask', // flash only
+    // effect: 'effect', // flash only
+
+    // polygon
+    fillcolor: 'fillColor',
+    fillalpha: 'fillAlpha',
+    borderwidth: 'borderWidth',
+    bordercolor: 'borderColor',
+    borderalpha: 'borderAlpha',
+    polyline: 'polyline'
+};
+
+export class Hotspot {
+    constructor (name, options) {
+        this._h = krShell.addHotspot(name);
+        Object.keys(options).forEach(key => {
+           this._h[key.toLowerCase()] = options[key];
+        });
+        this._init();
+    }
+
+    _init () {
+        this._addPointsProperty();
+        this._proxyData();
+
+        if (!this.url && this._h.points && this._h.points.length > 0) {
+            this.points = this._h.points;
+        }
+    }
+
+    _proxyData () {
+        Object.keys(KEY_MAPPING).forEach(key => {
+            Object.defineProperty(this, KEY_MAPPING[key], {
+                configurable: true,
+                enumerable: true,
+                get: () => {
+                    return this._h[key]
+                },
+                set: (val) => {
+                    this._h[key] = val;
+                }
+            })
+        });
+    }
+
+    _addPointsProperty () {
+        let h = this._h;
+
+        Object.defineProperty(this, 'points', {
+            enumerable: true,
+            configurable: true,
+            get: () => {
+                return h.point.getArray();
+            },
+            set: (newVal) => {
+                if (Array.isArray(newVal)) {
+                    h.point.count = 0;
+
+                    newVal.forEach((point) => {
+                        this.addPoint(point);
+                    });
+                }
+            }
+        });
+    }
+
+    addPoint (point) {
+        if (!!point) {
+            let index = this._h.point.count;
+            let p = this._h.point.createItem('point[' + index + ']');
+            p.ath = point.ath;
+            p.atv = point.atv;
+        }
+    }
+
+    on () {
+
+    }
+
+    off () {
+
+    }
+}
+
 export default function (krShell) {
     var krpano = krShell.krpano;
     var resolve = krShell.resolve;
+
+    krShell.Hotspot = Hotspot;
 
     extendHotspot();
 
