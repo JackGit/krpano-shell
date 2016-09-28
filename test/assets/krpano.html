@@ -25,10 +25,11 @@
 <div id="pano" style="width:100%;height:100%;">
 	<noscript><table style="width:100%;height:100%;"><tr style="vertical-align:middle;text-align:center;"><td>ERROR:<br><br>Javascript not activated<br><br></td></tr></table></noscript>
 	<script>
-		embedpano({swf:"krpano.swf", xml:"krpano.xml", target:"pano", html5:"auto", mobilescale:1.0, passQueryParameters:true});
+		embedpano({xml:"krpano.xml", target:"pano", html5:"auto", mobilescale:1.0, passQueryParameters:true});
 
 		function testHotspot () {
-			var h = krShell.addHotspot('test');
+			//var h = krShell.addHotspot('test');
+			var h = new krShell.Hotspot('test');
 			//h.addPoint({ath: 10, atv: 10});
 			//h.addPoint({ath: 10, atv: -10});
 			//h.addPoint({ath: -10, atv: -10});
@@ -49,9 +50,6 @@
 			return h;
 		}
 
-		function drag () {
-
-		}
 
 		function asyncLoop (condition, handler, doneHandler) {
 			function loop () {

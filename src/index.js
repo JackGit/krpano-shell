@@ -5,6 +5,7 @@ import preview from 'src/core/preview.js';
 import view from 'src/core/view';
 import image from 'src/core/image';
 import hotspot from 'src/core/hotspot.js';
+import layer from 'src/core/layer.js';
 
 global.krShell = {
 
@@ -22,6 +23,7 @@ global.krShell = {
         preview(krShell);
         image(krShell);
         hotspot(krShell);
+        layer(krShell);
     },
 
     destroy: function () {

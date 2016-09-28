@@ -62,4 +62,9 @@
 			<cube url="http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/mobile_%s.jpg"/>
 		</image>
 	</scene>
+
+	<layer name="logo"
+		   url="hotspot.png"
+		   align="rightbottom" x="20" y="20"
+			/>
 </krpano>
