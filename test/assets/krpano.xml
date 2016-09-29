@@ -68,5 +68,28 @@
 		   align="rightbottom" x="20" y="20"
 			/>
 
-	<control mouse="moveto"></control>
+	<events onenterfullscreen=""
+			onexitfullscreen=""
+			onxmlcomplete=""
+			onpreviewcomplete=""
+			onloadcomplete=""
+			onnewpano=""
+			onremovepano=""
+			onnewscene=""
+			onloaderror=""
+			onkeydown=""
+			onkeyup=""
+			onclick=""
+			onmousedown=""
+			onmouseup=""
+			onmousewheel=""
+			onidle=""
+			onviewchange=""
+			onviewchanged=""
+			onresize=""
+			onautorotatestart=""
+			onautorotatestop=""
+			onautorotateoneround=""
+			onautorotatechange=""
+			/>
 </krpano>

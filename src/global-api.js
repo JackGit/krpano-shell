@@ -85,7 +85,7 @@ export default function (krShell) {
     krShell.tween = krpano.actions.tween;
 
     (function proxyAutorotate () {
-        krShell.autorotate = krpano.autorotate;
+        krShell.autorotate = Object.create(krpano.autorotate);
         ['isRotating', 'isPaused', 'interruptionEvents', 'toFov', 'waitTime'].forEach(key => {
             Object.defineProperty(krShell.autorotate, key, {
                 configurable: true,
@@ -95,6 +95,53 @@ export default function (krShell) {
                 },
                 set: (val) => {
                     krpano.autorotate[key.toLowerCase()] = val;
+                }
+            });
+        });
+    })();
+
+    krShell.cursors = krpano.cursors;
+
+    krShell.area = krpano.area;
+
+    (function proxyDisplay () {
+        krShell.display = Object.create(krpano.display);
+        [
+            'stereo', 'stereoOverlap', 'hardwareLimit', 'useDesktopImage', 'mipMapping',
+            'loadWhileMoving', 'frameBufferScale', 'currentFPS', 'frame'
+        ].forEach(key => {
+            Object.defineProperty(krShell.display, key, {
+                configurable: true,
+                enumerable: true,
+                get: () => {
+                    return krpano.display[key.toLowerCase()];
+                },
+                set: (val) => {
+                    krpano.display[key.toLowerCase()] = val;
+                }
+            });
+        });
+    })();
+
+    (function proxyControl () {
+        krShell.control = Object.create(krpano.control);
+        [
+            'userControl', 'mouse', 'mouseFovChange', 'touch', 'touchZoom',
+            'dragRelative', 'dragInertia', 'dragFriction',
+            'moveToRelative', 'moveToAccelerate', 'moveToSpeed', 'moveToFriction', 'moveToYFriction',
+            'keybAccelerate', 'keybSpeed', 'keybFriction', 'keybInvert', 'keybFovChange',
+            'fovSpeed', 'fovFriction', 'zoomToCursor', 'zoomOutCursor',
+            'keyCodesLeft', 'keyCodesRight', 'keyCodesUp', 'keyCodesDown', 'keyCodesIn', 'keyCodesOut',
+            'keyDownRepeat', 'bouncingLimits'
+        ].forEach(key => {
+            Object.defineProperty(krShell.control, key, {
+                configurable: true,
+                enumerable: true,
+                get: () => {
+                    return krpano.control[key.toLowerCase()];
+                },
+                set: (val) => {
+                    krpano.control[key.toLowerCase()] = val;
                 }
             });
         });
