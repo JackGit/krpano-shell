@@ -6,7 +6,7 @@ const DEFAULT_PREVIEW_OPTIONS = {
     stripOrder: 'LFRBUD'
 };
 
-export class Preview {
+export default class Preview {
     /**
      *
      * @param {Object} options = { type, url, stripOrder }
@@ -43,7 +43,3 @@ Preview.TYPE = {
         return 'grid(' + type + ',' + xSteps + ',' + ySteps + ',' + res + ',' + lineCol + ',' + bgCol + ',' + pntCol + ')';
     }
 };
-
-export default function (krShell) {
-    krShell.Preview = Preview;
-}

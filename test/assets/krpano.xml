@@ -67,4 +67,6 @@
 		   url="hotspot.png"
 		   align="rightbottom" x="20" y="20"
 			/>
+
+	<control mouse="moveto"></control>
 </krpano>

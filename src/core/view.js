@@ -39,7 +39,7 @@ const DEFAULT_VIEW_OPTIONS = {
     vLookAtMax: ''
 };
 
-export class View {
+export default class View {
 
     constructor (options) {
         Object.assign(this, DEFAULT_VIEW_OPTIONS, options);
@@ -55,7 +55,3 @@ export class View {
 
 View.LIMIT_VIEW_TYPE = LIMIT_VIEW_TYPE;
 View.FOV_TYPE = FOV_TYPE;
-
-export default function (krShell) {
-    krShell.View = View;
-}

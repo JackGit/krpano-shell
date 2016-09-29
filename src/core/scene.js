@@ -1,5 +1,5 @@
-import { Preview } from './preview';
-import { View } from './view';
+import Preview from './preview';
+import View from './view';
 
 const DEFAULT_SCENE_OPTIONS = {
     preview: new Preview({type: Preview.TYPE.grid()}),
@@ -7,7 +7,7 @@ const DEFAULT_SCENE_OPTIONS = {
     image: null
 };
 
-class Scene {
+export default class Scene {
 
     constructor (name, options) {
         this.name = name;
@@ -30,27 +30,4 @@ class Scene {
         this._setContent();
         krShell.loadScene(this.name);
     }
-}
-
-export default function (krShell) {
-
-    var krpano = krShell.krpano;
-
-    krShell.Scene = Scene;
-
-    krShell.loadScene = function () {
-        krpano.actions.loadscene.apply(krpano, arguments);
-    };
-
-    krShell.createScene = function (name) {
-        return krpano.scene.createItem(name);
-    };
-
-    krShell.getScene = function (indexOrName) {
-        if (indexOrName) {
-            return krpano.scene.getItem(indexOrName);
-        } else {
-            return krpano.scene.getArray();
-        }
-    };
 }

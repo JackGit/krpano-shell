@@ -32,7 +32,7 @@ const KEY_MAPPING = {
 
 let prototypeExtended = false;
 
-export class Layer {
+export default class Layer {
 
     constructor (name, options) {
         this._layer = krShell.krpano.addlayer(name);
@@ -70,8 +70,4 @@ export class Layer {
     off () {
         this._layer.off.apply(this._layer, arguments);
     }
-}
-
-export default function (krShell) {
-    krShell.Layer = Layer;
 }

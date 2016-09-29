@@ -67,7 +67,7 @@ const KEY_MAPPING = {
 
 let prototypeExtended = false;
 
-export class Hotspot {
+export default class Hotspot {
 
     constructor (name, options) {
         this._hotspot = krShell.krpano.addhotspot(name);
@@ -140,12 +140,9 @@ export class Hotspot {
     off () {
         this._hotspot.off.apply(this._hotspot, arguments);
     }
-}
 
-export default function (krShell) {
-    let krpano = krShell.krpano;
-    let resolve = krShell.resolve;
-
-    krShell.Hotspot = Hotspot;
+    lookTo () {
+        krShell.lookToHotspot(this.name);
+    }
 }
 

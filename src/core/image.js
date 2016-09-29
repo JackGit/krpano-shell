@@ -211,11 +211,3 @@ export class VideoImage {
 
     }
 }
-
-export default function (krShell) {
-    krShell.CubeImage = CubeImage;
-    krShell.CubeStripImage = CubeStripImage;
-    krShell.SphereImage = SphereImage;
-    krShell.CylinderImage = CylinderImage;
-    krShell.FishEyeImage = FishEyeImage;
-}
