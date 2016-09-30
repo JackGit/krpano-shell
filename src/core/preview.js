@@ -12,9 +12,13 @@ export default class Preview {
      * @param {Object} options = { type, url, stripOrder }
      */
     constructor (options) {
+        this.pano = null;
         Object.assign(this, DEFAULT_PREVIEW_OPTIONS, options);
     }
 
+    attach (pano) {
+        this.pano = pano;
+    }
     /**
      * to XML string: '<preview type="" url="test" striporder="LFRBUD" details="16"></preview>'
      * @returns {string}

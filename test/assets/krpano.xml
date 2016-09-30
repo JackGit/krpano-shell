@@ -3,61 +3,29 @@
 	<!--<plugin name="shell" url="shell.js"></plugin>
 	<plugin name="testplugin" url="test-plugin.js" align="center" onclick="dosomething(hello,plugin)"></plugin>-->
 	<!-- grid preview pano -->
-	<preview type="grid(cube,64,64,512,0xCCCCCC,0xF6F6F6,0x999999);" />
+	<!--<preview type="grid(cube,64,64,512,0xCCCCCC,0xF6F6F6,0x999999);" />-->
 
 	<!-- view/fov settings -->
 	<view hlookat="0" vlookat="0" fovtype="VFOV" fov="90" fovmin="30" fovmax="150" />
 
 	<!-- 注册shell需要使用的变量和函数 -->
 	<action type="javascript" name="register_shell" autorun="preinit"><![CDATA[
-		krShell.init(krpano, resolve);
+		console.log('register shell');
+		krShell.init({
+			name: 'p1',
+			krpano: krpano,
+			resolve: resolve
+		});
 	]]></action>
-
-	<action name="draghotspot"><![CDATA[
-		spheretoscreen(ath, atv, hotspotcenterx, hotspotcentery, 'l');
-
-		sub(drag_adjustx, mouse.stagex, hotspotcenterx);
-		sub(drag_adjusty, mouse.stagey, hotspotcentery);
-
-		asyncloop(pressed,
-			sub(dx, mouse.stagex, drag_adjustx);
-			sub(dy, mouse.stagey, drag_adjusty);
-			screentosphere(dx, dy, ath, atv);
-		  );
-	]]></action>
-
-	<hotspot name="spot2" url="hotspot.png" zoom="true"      scale="1" ath="0"   atv="0" ondown="draghotspot();" />
-
-	<contextmenu fullscreen="false">
-		<item caption="item1" onclick="..." />
-		<item caption="item2" onclick="..." />
-	</contextmenu>
 
 	<scene name="scene1">
-		<image></image>
 		<preview url="preview.jpg" />
-		<view hlookat="0" vlookat="0" fovtype="MFOV" fov="90" fovmin="20" fovmax="120" />
+		<!--<view hlookat="0" vlookat="0" fovtype="MFOV" fov="90" fovmin="20" fovmax="120" />-->
 	</scene>
 
 	<scene name="scene_1197790" pano_id="1197790">
 		<view hlookat="0" vlookat="0" fovtype="MFOV" fov="90" fovmin="20" fovmax="120" />
 		<preview url="http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/preview.jpg"/>
-		<!--
-		<image type="CUBE" multires="true" tilesize="512" if="!webvr.isenabled AND device.desktop">
-			<level tiledimagewidth="3820" tiledimageheight="3820">
-				<cube url="http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/%s/l4/%v/l4_%s_%v_%h.jpg"/>
-			</level>
-			<level tiledimagewidth="1910" tiledimageheight="1910">
-				<cube url="http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/%s/l3/%v/l3_%s_%v_%h.jpg"/>
-			</level>
-			<level tiledimagewidth="956" tiledimageheight="956">
-				<cube url="http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/%s/l2/%v/l2_%s_%v_%h.jpg"/>
-			</level>
-			<level tiledimagewidth="512" tiledimageheight="512">
-				<cube url="http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/%s/l1/%v/l1_%s_%v_%h.jpg"/>
-			</level>
-		</image>
-		-->
 		<image>
 			<cube url="http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/mobile_%s.jpg"/>
 		</image>
@@ -66,30 +34,5 @@
 	<layer name="logo"
 		   url="hotspot.png"
 		   align="rightbottom" x="20" y="20"
-			/>
-
-	<events onenterfullscreen=""
-			onexitfullscreen=""
-			onxmlcomplete=""
-			onpreviewcomplete=""
-			onloadcomplete=""
-			onnewpano=""
-			onremovepano=""
-			onnewscene=""
-			onloaderror=""
-			onkeydown=""
-			onkeyup=""
-			onclick=""
-			onmousedown=""
-			onmouseup=""
-			onmousewheel=""
-			onidle=""
-			onviewchange=""
-			onviewchanged=""
-			onresize=""
-			onautorotatestart=""
-			onautorotatestop=""
-			onautorotateoneround=""
-			onautorotatechange=""
 			/>
 </krpano>

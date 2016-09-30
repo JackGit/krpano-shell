@@ -24,10 +24,14 @@ export function extendEventAbility (prototype, getPath) {
     };
 
     prototype.off = function (event, handler) {
-        if (this.__eventHandlers[event]) {
-            this.__eventHandlers[event] = this.__eventHandlers[event].filter(function (h) {
-                return handler !== h;
-            });
+        if (this.__eventHandlers && this.__eventHandlers[event]) {
+            if (handler) {
+                this.__eventHandlers[event] = this.__eventHandlers[event].filter(function (h) {
+                    return handler !== h;
+                });
+            } else {
+                this.__eventHandlers[event] = [];
+            }
         }
     };
 }

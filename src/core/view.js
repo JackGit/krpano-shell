@@ -42,7 +42,28 @@ const DEFAULT_VIEW_OPTIONS = {
 export default class View {
 
     constructor (options) {
+        this.pano = null;
+        this._proxy();
         Object.assign(this, DEFAULT_VIEW_OPTIONS, options);
+    }
+
+    _proxy () {
+        Object.keys(DEFAULT_VIEW_OPTIONS).forEach(key => {
+            Object.defineProperty(this, key, {
+                configurable: true,
+                enumerable: true,
+                get: () => {
+                    return krShell.krpano.view[key.toLowerCase()]
+                },
+                set: (val) => {
+                    krShell.krpano.view[key.toLowerCase()] = val;
+                }
+            });
+        });
+    }
+
+    attach (pano) {
+        
     }
 
     toString () {

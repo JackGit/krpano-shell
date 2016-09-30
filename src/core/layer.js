@@ -36,6 +36,7 @@ export default class Layer {
 
     constructor (name, options) {
         this._layer = krShell.krpano.addlayer(name);
+        this.pano = null;
 
         Object.keys(options || {}).forEach(key => {
             this._layer[key.toLowerCase()] = options[key];
@@ -60,6 +61,7 @@ export default class Layer {
     }
 
     remove () {
+        this.pano = null;
         krShell.krpano.removelayer(this.name);
     }
 

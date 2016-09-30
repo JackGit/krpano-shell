@@ -3,4 +3,4 @@ node_modules
 .DS_STORE
 .idea
 .npm
-
+npm-debug.log

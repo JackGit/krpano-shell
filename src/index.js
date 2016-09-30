@@ -1,5 +1,6 @@
 import 'src/polyfill/object-assign';
 import globalAPI from 'src/global-api';
+import Pano from 'src/core/pano';
 import Scene from 'src/core/scene';
 import Preview from 'src/core/preview';
 import View from 'src/core/view';
@@ -7,34 +8,40 @@ import { CubeImage, CubeStripImage, SphereImage, CylinderImage, FishEyeImage } f
 import Layer from 'src/core/layer';
 import Hotspot from 'src/core/hotspot';
 
+let panos = {};
+let panoReadyHandlers = {};
 
 global.krShell = {
 
-    krpano: null,
-    resolve: null,
+    Pano: Pano,
+    Scene: Scene,
+    Preview: Preview,
+    View: View,
+    CubeImage: CubeImage,
+    CubeStripImage: CubeStripImage,
+    SphereImage: SphereImage,
+    CylinderImage: CylinderImage,
+    FishEyeImage: FishEyeImage,
+    Layer: Layer,
+    Hotspot: Hotspot,
 
-    init: function (krpanoInterfaceObj, resolve) {
+    init: function (options) {
+        let pano = new Pano(options);
+        let panoName = pano.name;
 
-        this.krpano = krpanoInterfaceObj;
-        this.resolve = resolve;
-
-        globalAPI(krShell);
-
-        krShell.Scene = Scene;
-        krShell.Preview = Preview;
-        krShell.View = View;
-        krShell.CubeImage = CubeImage;
-        krShell.CubeStripImage = CubeStripImage;
-        krShell.SphereImage = SphereImage;
-        krShell.CylinderImage = CylinderImage;
-        krShell.FishEyeImage = FishEyeImage;
-        krShell.Layer = Layer;
-        krShell.Hotspot = Hotspot;
+        panos[panoName] = pano;
+        panoReadyHandlers[panoName] && panoReadyHandlers[panoName]();
     },
 
-    destroy: function () {
-        console.log('krShell.destroy()');
+    pano: function (name) {
+        return panos[name];
+    },
+
+    ready: function (panoName, callback) {
+        panoReadyHandlers[panoName] = callback;
     }
 };
+
+globalAPI(krShell);
 
 export default krShell;
