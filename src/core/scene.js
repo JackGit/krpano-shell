@@ -6,7 +6,6 @@ export default class Scene {
     constructor (name, options) {
         this.name = name;
         this.pano = null;
-        this.options = options;
 
         this.preview = null;
         this.view = null;
@@ -14,8 +13,8 @@ export default class Scene {
     }
 
     _setContent () {
-        this.preview = new Preview(this.options.preview);
-        this.view = new View(this.options.view);
+        this.preview = new Preview(this.preview);
+        this.view = new View(this.view);
         this.sceneElement.content = '';
         ['preview', 'view', 'image'].forEach(attr => {
             if (this[attr]) {
