@@ -19,6 +19,7 @@ export default class Pano {
         this.layers = [];
         this.contextMenu = null;
         this.currentScene = null;
+        this.view = null;
 
         this._init();
     }
@@ -35,7 +36,6 @@ export default class Pano {
         for (let i = 0; i < this.scenes.length; i ++) {
             if (this.scenes[i].name === sceneName) {
                 this.currentScene = this.scenes[i];
-                this.currentScene.attach(this);
                 this.currentScene.load.apply(this.currentScene, params);
                 break;
             }

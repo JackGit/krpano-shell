@@ -39,9 +39,10 @@
 		});
 
 		function createScene () {
-			var preview = new krShell.Preview({type: krShell.Preview.TYPE.grid()});
 			var scene = new krShell.Scene('defaultscene', {
-				preview: preview
+				preview: {
+					type: krShell.Preview.TYPE.grid()
+				}
 			});
 
 			//pano.addScene(scene);
