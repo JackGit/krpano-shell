@@ -1,8 +1,5 @@
 import actions from 'src/core/actions';
 import events from 'src/core/events';
-import Scene from './Scene';
-import Hotspot from './hotspot';
-import Layer from './Layer';
 
 let pid = 0;
 
@@ -43,12 +40,8 @@ export default class Pano {
     }
 
     addScene (scene) {
-        if (scene instanceof Scene) {
-            scene.attach(this);
-            this.scenes.push(scene);
-        } else {
-            console.warn('Pano.addScene() can only add instance of Scene class');
-        }
+        scene.attach(this);
+        this.scenes.push(scene);
     }
 
     removeScene (name) {
@@ -61,12 +54,8 @@ export default class Pano {
     }
 
     addHotspot (hotspot) {
-        if (hotspot instanceof Hotspot) {
-            hotspot.attach(this);
-            this.hotspots.push(hotspot);
-        } else {
-            console.warn('Pano.addHotspot() can only add instance of Hotspot class');
-        }
+        hotspot.attach(this);
+        this.hotspots.push(hotspot);
     }
 
     removeHotspot (name) {
@@ -79,12 +68,8 @@ export default class Pano {
     }
 
     addLayer (layer) {
-        if (layer instanceof Layer) {
-            layer.attach(this);
-            this.layers.push(layer);
-        } else {
-            console.warn('Pano.addLayer() can only add instance of Layer class');
-        }
+        layer.attach(this);
+        this.layers.push(layer);
     }
 
     removeLayer (name) {

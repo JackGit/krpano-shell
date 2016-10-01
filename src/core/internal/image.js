@@ -1,5 +1,6 @@
 import { createElement } from 'src/utils/xml';
 import { hasVal } from 'src/utils/lang';
+import { IMAGE_TYPE } from 'src/constants';
 
 // default values
 const DEFAULT_IMAGE_OPTIONS = {
@@ -19,16 +20,16 @@ const DEFAULT_MULTIRES_OPTIONS = {
     progressive: false
 };
 const DEFAULT_CUBE_OPTIONS = {
-    type: 'CUBE',
+    type: IMAGE_TYPE.CUBE,
     url: '',
     cubeLabels: 'l|f|r|b|u|d'
 };
 const DEFAULT_CUBESTRIP_OPTIONS = {
-    type: 'CUBESTRIP',
+    type: IMAGE_TYPE.CUBESTRIP,
     url: ''
 };
 const DEFAULT_SPHERE_OPTIONS = {
-    type: 'SPHERE',
+    type: IMAGE_TYPE.SPHERE,
     hFov: 360,
     vFov: '',
     vOffset: 0,
@@ -37,7 +38,7 @@ const DEFAULT_SPHERE_OPTIONS = {
     mJpegStream: ''
 };
 const DEFAULT_CYLINDER_OPTIONS = {
-    type: 'CYLINDER',
+    type: IMAGE_TYPE.CYLINDER,
     hFov: 360,
     vFov: '',
     vOffset: 0,

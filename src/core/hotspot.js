@@ -70,7 +70,7 @@ let prototypeExtended = false;
 export default class Hotspot {
 
     constructor (name, options) {
-        this._hotspot = krShell.krpano.addhotspot(name);
+        this._hotspot = pano.krpano.addhotspot(name);
         this.pano = null;
 
         Object.keys(options || {}).forEach(key => {
@@ -122,7 +122,7 @@ export default class Hotspot {
     }
 
     attach (pano) {
-
+        this.pano = pano;
     }
 
     addPoint (point) {
@@ -136,7 +136,7 @@ export default class Hotspot {
 
     remove () {
         this.pano = null;
-        krShell.krpano.removehotspot(this.name);
+        pano.krpano.removehotspot(this.name);
     }
 
     on () {
@@ -148,7 +148,7 @@ export default class Hotspot {
     }
 
     lookTo () {
-        krShell.lookToHotspot(this.name);
+        pano.lookToHotspot(this.name);
     }
 }
 

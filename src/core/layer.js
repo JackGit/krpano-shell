@@ -60,6 +60,10 @@ export default class Layer {
         proxy(this, this._layer, KEY_MAPPING);
     }
 
+    attach (pano) {
+        this.pano = pano;
+    }
+
     remove () {
         this.pano = null;
         krShell.krpano.removelayer(this.name);

@@ -1,20 +1,5 @@
 import { createElement } from 'src/utils/xml';
-
-const LIMIT_VIEW_TYPE = {
-    OFF: 'off',
-    AUTO: 'auto',
-    LOOK_AT: 'lookat',
-    RANGE: 'range',
-    FULL_RANGE: 'fullrange',
-    OFF_RANGE: 'offrange'
-};
-
-const FOV_TYPE = {
-    VFOV: 'VFOV',
-    HFOV: 'HFOV',
-    DFOV: 'DFOV',
-    MFOV: 'MFOV'
-};
+import { LIMIT_VIEW_TYPE, FOV_TYPE } from 'src/constants'
 
 const DEFAULT_VIEW_OPTIONS = {
     hLookAt: .0,
@@ -41,8 +26,8 @@ const DEFAULT_VIEW_OPTIONS = {
 
 export default class View {
 
-    constructor (options) {
-        this.pano = null;
+    constructor (pano, options) {
+        this.pano = pano;
         this._proxy();
         Object.assign(this, DEFAULT_VIEW_OPTIONS, options);
     }
@@ -53,26 +38,19 @@ export default class View {
                 configurable: true,
                 enumerable: true,
                 get: () => {
-                    return krShell.krpano.view[key.toLowerCase()]
+                    return pano.krpano.view[key.toLowerCase()]
                 },
                 set: (val) => {
-                    krShell.krpano.view[key.toLowerCase()] = val;
+                    pano.krpano.view[key.toLowerCase()] = val;
                 }
             });
         });
     }
 
-    attach (pano) {
-        
-    }
-
     toString () {
-        let view = createElement('view', this);
+        let view = createElement('view', this, Object.keys(DEFAULT_VIEW_OPTIONS));
         let xml = view.outerHTML;
         view = null;
         return xml;
     }
 }
-
-View.LIMIT_VIEW_TYPE = LIMIT_VIEW_TYPE;
-View.FOV_TYPE = FOV_TYPE;
