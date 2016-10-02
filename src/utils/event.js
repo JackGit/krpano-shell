@@ -1,4 +1,4 @@
-export function extendEventAbility (prototype, getPath) {
+export function extendEventAbility (panoName, prototype, getPath) {
 
     prototype.__invokeEventHandlers = function (event, mouse) {
         (this.__eventHandlers[event] || []).forEach(handler => {
@@ -20,7 +20,7 @@ export function extendEventAbility (prototype, getPath) {
             handlers[event] = [handler];
         }
 
-        this['on' + event] = 'jscall(krpano.get("' + path + '").__invokeEventHandlers("' + event + '", krShell.resolve("mouse")))';
+        this['on' + event] = 'jscall(krpano.get("' + path + '").__invokeEventHandlers("' + event + '", krShell.pano("' + panoName + '").resolve("mouse")))';
     };
 
     prototype.off = function (event, handler) {

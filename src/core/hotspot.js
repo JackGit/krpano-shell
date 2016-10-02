@@ -70,19 +70,15 @@ let prototypeExtended = false;
 export default class Hotspot {
 
     constructor (name, options) {
-        this._hotspot = pano.krpano.addhotspot(name);
+        this._hotspot = null;
         this.pano = null;
-
-        Object.keys(options || {}).forEach(key => {
-           this._hotspot[key.toLowerCase()] = options[key];
-        });
-
-        this._init();
+        this.options = options;
+        this.name = name;
     }
 
     _init () {
         if (!prototypeExtended) {
-            extendEventAbility(this._hotspot.constructor.prototype, function () {
+            extendEventAbility(this.pano.name, this._hotspot.constructor.prototype, function () {
                 return 'hotspot[' + this.name + ']';
             });
             prototypeExtended = true;
@@ -122,7 +118,15 @@ export default class Hotspot {
     }
 
     attach (pano) {
+        let options = this.options;
         this.pano = pano;
+        this._hotspot = pano.krpano.addhotspot(this.name);
+
+        Object.keys(options || {}).forEach(key => {
+            this._hotspot[key.toLowerCase()] = options[key];
+        });
+
+        this._init();
     }
 
     addPoint (point) {
@@ -135,8 +139,8 @@ export default class Hotspot {
     }
 
     remove () {
+        this.pano.krpano.removehotspot(this.name);
         this.pano = null;
-        pano.krpano.removehotspot(this.name);
     }
 
     on () {
@@ -148,7 +152,7 @@ export default class Hotspot {
     }
 
     lookTo () {
-        pano.lookToHotspot(this.name);
+        this.pano.lookToHotspot(this.name);
     }
 }
 

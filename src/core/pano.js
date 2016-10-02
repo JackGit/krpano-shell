@@ -34,7 +34,7 @@ export default class Pano {
             if (this.scenes[i].name === sceneName) {
                 this.currentScene = this.scenes[i];
                 this.currentScene.load.apply(this.currentScene, params);
-                break;
+                return;
             }
         }
     }

@@ -33,6 +33,8 @@ export default class View {
     }
 
     _proxy () {
+        let pano = this.pano;
+
         Object.keys(DEFAULT_VIEW_OPTIONS).forEach(key => {
             Object.defineProperty(this, key, {
                 configurable: true,

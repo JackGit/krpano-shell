@@ -46,8 +46,8 @@ export default class Scene {
 
     _setContent () {
         this.preview && (this.preview = new Preview(this.pano, this.preview));
-        this.view && (this.view = new View(this.pano, this.view));
         this.image && (this.image = createImage(this.image.type, this.image));
+        this.view = new View(this.pano, this.view);
 
         this.sceneElement.content = '';
         ['preview', 'view', 'image'].forEach(attr => {

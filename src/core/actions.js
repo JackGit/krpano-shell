@@ -115,7 +115,7 @@ export default function (pano) {
 
         // extend menu item with on/off event ability
         let tempItem = krpano.contextmenu.item.createItem('__temp_item__');
-        extendEventAbility(tempItem.constructor.prototype, function () {
+        extendEventAbility(pano.name, tempItem.constructor.prototype, function () {
             return 'contextmenu.item[' + this.name + ']';
         });
         krpano.contextmenu.item.removeItem('__temp_item__');

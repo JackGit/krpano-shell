@@ -22,7 +22,7 @@
 <script src="krpano.js"></script>
 <script src="../../dist/bundle.js"></script>
 
-<div id="pano" style="width:100%;height:100%;">
+<div id="pano" style="width:100%;height:50%;">
 	<noscript><table style="width:100%;height:100%;"><tr style="vertical-align:middle;text-align:center;"><td>ERROR:<br><br>Javascript not activated<br><br></td></tr></table></noscript>
 	<script>
 		embedpano({xml:"krpano.xml", target:"pano", html5:"auto", mobilescale:1.0, passQueryParameters:false});
@@ -31,11 +31,10 @@
 		var panoName = 'p1';
 
 		krShell.ready(panoName, function (instance) {
-			console.log('shell is ready', instance);
 			pano = instance;
 			createScene();
 			setContextMenu();
-			//addDraggbleHotspot();
+			addDraggbleHotspot();
 		});
 
 		function createScene () {
@@ -84,6 +83,8 @@
 				atv: 0
 			});
 
+			pano.addHotspot(h);
+
 			h.on('down', function (event) {
 				var center = pano.sphereToScreen(h.ath, h.atv);
 				var targetX = event.stagex - center.x;
@@ -120,6 +121,23 @@
 			};
 			pano.currentScene.load();
 		}
+	</script>
+</div>
+
+<div id="pano2" style="width:100%;height:50%;">
+	<noscript><table style="width:100%;height:100%;"><tr style="vertical-align:middle;text-align:center;"><td>ERROR:<br><br>Javascript not activated<br><br></td></tr></table></noscript>
+	<script>
+		embedpano({xml:"krpano2.xml", target:"pano2", html5:"auto", mobilescale:1.0, passQueryParameters:false});
+
+		 krShell.ready('p2', function (instance) {
+			 var scene = new krShell.Scene('s1', {
+				preview: {
+					url: 'http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/preview.jpg'
+				}
+			 });
+			 instance.addScene(scene);
+			 instance.loadScene('s1');
+		 });
 	</script>
 </div>
 

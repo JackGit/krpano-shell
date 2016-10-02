@@ -12,7 +12,7 @@
 	<action type="javascript" name="register_shell" autorun="preinit"><![CDATA[
 		console.log('register shell');
 		krShell.init({
-			name: 'p1',
+			name: 'p2',
 			krpano: krpano,
 			resolve: resolve
 		});

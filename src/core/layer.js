@@ -35,19 +35,15 @@ let prototypeExtended = false;
 export default class Layer {
 
     constructor (name, options) {
-        this._layer = krShell.krpano.addlayer(name);
+        this._layer = null;
         this.pano = null;
-
-        Object.keys(options || {}).forEach(key => {
-            this._layer[key.toLowerCase()] = options[key];
-        });
-
-        this._init();
+        this.options = options;
+        this.name = name;
     }
 
     _init () {
         if (!prototypeExtended) {
-            extendEventAbility(this._layer.constructor.prototype, function () {
+            extendEventAbility(this.pano.name, this._layer.constructor.prototype, function () {
                 return 'layer[' + this.name + ']';
             });
             prototypeExtended = true;
@@ -61,12 +57,20 @@ export default class Layer {
     }
 
     attach (pano) {
+        let options = this.options;
         this.pano = pano;
+        this._layer = pano.krpano.addlayer(this.name);
+
+        Object.keys(options || {}).forEach(key => {
+            this._layer[key.toLowerCase()] = options[key];
+        });
+
+        this._init();
     }
 
     remove () {
+        this.pano.krpano.removelayer(this.name);
         this.pano = null;
-        krShell.krpano.removelayer(this.name);
     }
 
     on () {
