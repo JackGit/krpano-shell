@@ -38,7 +38,7 @@
 		});
 
 		function createScene () {
-			var scene = new krShell.Scene('defaultscene', {
+			var s1 = new krShell.Scene('s1', {
 				preview: {
 					url: 'http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/preview.jpg'
 				},
@@ -47,9 +47,15 @@
 					url: 'http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/mobile_%s.jpg'
 				}
 			});
+			var s2 = new krShell.Scene('s2', {
+				preview: {
+					type: krShell.PREVIEW_TYPE.grid()
+				}
+			});
 
-			pano.addScene(scene);
-			pano.loadScene('defaultscene');
+			pano.addScene(s1);
+			pano.addScene(s2);
+			pano.loadScene('s1');
 		}
 
 		function setContextMenu () {
@@ -103,12 +109,14 @@
 		}
 
 		function setImagePreview () {
+			pano.currentScene.image = null;
 			pano.currentScene.preview.type = '';
 			pano.currentScene.preview.url = 'http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/preview.jpg';
 			pano.currentScene.load();
 		}
 
 		function setGridPreview () {
+			pano.currentScene.image = null;
 			pano.currentScene.preview.url = '';
 			pano.currentScene.preview.type = krShell.PREVIEW_TYPE.grid();
 			pano.currentScene.load();
