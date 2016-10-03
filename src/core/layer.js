@@ -39,6 +39,7 @@ export default class Layer {
         this.pano = null;
         this.options = options;
         this.name = name;
+        this.pluginParams = options ? options.pluginParams || {} : {};
     }
 
     _init () {
@@ -49,6 +50,7 @@ export default class Layer {
             prototypeExtended = true;
         }
 
+        this.setPluginParams();
         this._proxyData();
     }
 
@@ -66,6 +68,11 @@ export default class Layer {
         });
 
         this._init();
+    }
+
+    setPluginParams (params) {
+        Object.assign(this.pluginParams, params);
+        Object.assign(this._layer, this.pluginParams);
     }
 
     remove () {

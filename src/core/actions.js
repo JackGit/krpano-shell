@@ -24,6 +24,12 @@ export default function (pano) {
     pano.cursors = krpano.cursors;
     pano.area = krpano.area;
 
+    pano.loadFile = function (url, onSuccess) {
+        pano.krpano.loadFile(url, function (response) {
+            onSuccess && onSuccess(response.data);
+        });
+    };
+
     (function proxyAutorotate () {
         pano.autorotate = Object.create(krpano.autorotate);
         ['isRotating', 'isPaused', 'interruptionEvents', 'toFov', 'waitTime'].forEach(key => {

@@ -7,6 +7,6 @@ export default function (pano) {
         return 'events';
     });
 
-    krpano.on = krpano.events.on.bind(krpano.events);
-    krpano.off = krpano.events.off.bind(krpano.events);
+    pano.on = krpano.events.on.bind(krpano.events);
+    pano.off = krpano.events.off.bind(krpano.events);
 }

@@ -35,7 +35,30 @@
 			createScene();
 			setContextMenu();
 			addDraggbleHotspot();
+
+			addSnowPlugin();
 		});
+
+		function addSnowPlugin () {
+			var layer = new krShell.Layer('snow', {
+				url: 'snow.js'
+			});
+
+			pano.addLayer(layer);
+			layer.on('loaded', function () {
+				console.log('loaded');
+				layer.setPluginParams({
+					mode: 'image',
+					imageurl: 'hotspot.png',
+					flakes: 500,
+					floor: 1
+				});
+			});
+		}
+
+		function testLoadPlugin () {
+			pano.loadPlugin('t', 'test-plugin.js', {value: 111}, function() {this.dosomething()})
+		}
 
 		function testExpectedScene () {
 			var s = new krShell.Scene();

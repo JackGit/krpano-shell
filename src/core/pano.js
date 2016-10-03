@@ -64,6 +64,12 @@ export default class Pano {
         this.hotspots.push(hotspot);
     }
 
+    getHotspot (name) {
+        return this.hotspots.filter(hotspot => {
+            return hotspot.name === name;
+        })[0];
+    }
+
     removeHotspot (name) {
         this.hotspots = this.hotspots.filter(hotspot => {
             if (hotspot.name === name) {
@@ -78,6 +84,12 @@ export default class Pano {
         this.layers.push(layer);
     }
 
+    getLayer (name) {
+        return this.layers.filter(layer => {
+            return layer.name === name;
+        })[0]
+    }
+
     removeLayer (name) {
         this.layers = this.layers.filter(layer => {
             if (layer.name === name) {
@@ -85,6 +97,16 @@ export default class Pano {
             }
             return layer.name !== name;
         });
+    }
+
+    loadPlugin (name, url, params, onLoaded) {
+        let layer = new krShell.Layer(name, {
+            url: url,
+            pluginParams: params
+        });
+        this.addLayer(layer);
+        layer.on('loaded', onLoaded);
+        return layer;
     }
 
     destroy () {
