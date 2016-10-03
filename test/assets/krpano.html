@@ -37,6 +37,28 @@
 			addDraggbleHotspot();
 		});
 
+		function testExpectedScene () {
+			var s = new krShell.Scene();
+			// new krShell.Scene({
+			// 		preview: {
+			//			url: ''
+			// 		},
+			//		view: {},
+			//		image: {}
+			// });
+
+			s.preview = {};
+			s.view = {};
+			s.image = {};
+
+			pano.addScene(s);
+
+			s.preview.type = '';
+			pano.loadScene(s.name);
+
+			s.view.hLookAt = 10;
+		}
+
 		function createScene () {
 			var s1 = new krShell.Scene('s1', {
 				preview: {

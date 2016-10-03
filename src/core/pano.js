@@ -27,7 +27,7 @@ export default class Pano {
     }
 
     loadScene () {
-        let sceneName = arguments[0];
+        let sceneName = typeof arguments[0] === 'string' ? arguments[0] : arguments[0].name;
         let params = Array.prototype.slice.call(arguments, 1);
 
         for (let i = 0; i < this.scenes.length; i ++) {
@@ -42,6 +42,12 @@ export default class Pano {
     addScene (scene) {
         scene.attach(this);
         this.scenes.push(scene);
+    }
+
+    getScene (name) {
+        return this.scenes.filter(scene => {
+            return scene.name === name;
+        })[0];
     }
 
     removeScene (name) {

@@ -26,33 +26,47 @@ const DEFAULT_VIEW_OPTIONS = {
 
 export default class View {
 
-    constructor (pano, options) {
-        this.pano = pano;
+    constructor (scene, options) {
+        this.scene = scene;
+        this.options = Object.assign(DEFAULT_VIEW_OPTIONS, options);
         this._proxy();
-        Object.assign(this, DEFAULT_VIEW_OPTIONS, options);
     }
 
     _proxy () {
-        let pano = this.pano;
-
         Object.keys(DEFAULT_VIEW_OPTIONS).forEach(key => {
             Object.defineProperty(this, key, {
                 configurable: true,
                 enumerable: true,
                 get: () => {
-                    return pano.krpano.view[key.toLowerCase()]
+                    if (this.scene.isActive()) {
+                        return this.scene.pano.krpano.view[key.toLowerCase()]
+                    } else {
+                        return this.options[key];
+                    }
                 },
                 set: (val) => {
-                    pano.krpano.view[key.toLowerCase()] = val;
+                    this.options[key] = val;
+                    if (this.scene.isActive()) {
+                        this.scene.pano.krpano.view[key.toLowerCase()] = val;
+                    }
                 }
             });
         });
     }
 
     toString () {
-        let view = createElement('view', this, Object.keys(DEFAULT_VIEW_OPTIONS));
-        let xml = view.outerHTML;
+        let view = null;
+        let xml = '';
+
+        if (this.scene.isActive()) {
+            view = createElement('view', this.scene.pano.krpano.view, Object.keys(DEFAULT_VIEW_OPTIONS).map(k => {return k.toLowerCase()}));
+        } else {
+            createElement('view', this.options, Object.keys(DEFAULT_VIEW_OPTIONS));
+        }
+
+        xml = view.outerHTML;
         view = null;
+
         return xml;
     }
 }

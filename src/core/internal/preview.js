@@ -11,8 +11,8 @@ export default class Preview {
      *
      * @param {Object} options = { type, url, stripOrder }
      */
-    constructor (pano, options) {
-        this.pano = pano;
+    constructor (scene, options) {
+        this.scene = scene;
         Object.assign(this, DEFAULT_PREVIEW_OPTIONS, options);
     }
 

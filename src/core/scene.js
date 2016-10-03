@@ -9,9 +9,9 @@ import {
     FishEyeImage
 } from './internal/image';
 
-function createImage (type, options) {
+function createImage (options) {
     let image = null;
-    switch (type) {
+    switch (options.type) {
         case IMAGE_TYPE.CUBE:
             image = new CubeImage(options);
             break;
@@ -34,22 +34,17 @@ function createImage (type, options) {
 export default class Scene {
 
     constructor (name, options) {
-        options || (options = {});
-
         this.name = name;
         this.pano = null;
 
-        this.preview = options.preview;
-        this.view = options.view;
-        this.image = options.image;
+        this.view = new View(this, options.view);
+        this.preview = new Preview(this, options.preview);
+        this.image = createImage(options.image || {});
     }
 
     _setContent () {
-        this.preview && (this.preview = new Preview(this.pano, this.preview));
-        this.image && (this.image = createImage(this.image.type, this.image));
-        this.view = new View(this.pano, this.view);
-
         this.sceneElement.content = '';
+
         ['preview', 'view', 'image'].forEach(attr => {
             if (this[attr]) {
                 this.sceneElement.content += this[attr].toString();
@@ -60,6 +55,10 @@ export default class Scene {
     attach (pano) {
         this.pano = pano;
         this.sceneElement = this.pano.krpano.scene.createItem(this.name);
+    }
+
+    isActive () {
+        return this.pano.currentScene === this;
     }
 
     load () {
