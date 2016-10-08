@@ -12,187 +12,197 @@
 		@media only screen and (min-device-width:800px) { html { overflow:hidden; } }
 		html { height:100%; }
 		body { height:100%; overflow:hidden; margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#FFFFFF; background-color:#000000; }
+
+		.container {
+			position: relative;
+			width: 100%;
+			height: 100%;
+		}
+		#overlay {
+			position: absolute;
+			background: rgba(0,0,0,0.4);
+			width: 100%;
+			height: 80px;
+			bottom: 0;
+			z-index: 5000;
+		}
 	</style>
 </head>
 <body>
 
-<script>
-	window.krShell = {};
-</script>
 <script src="krpano.js"></script>
 <script src="../../dist/bundle.js"></script>
 
-<div id="pano" style="width:100%;height:50%;">
-	<noscript><table style="width:100%;height:100%;"><tr style="vertical-align:middle;text-align:center;"><td>ERROR:<br><br>Javascript not activated<br><br></td></tr></table></noscript>
-	<script>
-		embedpano({xml:"krpano.xml", target:"pano", html5:"auto", mobilescale:1.0, passQueryParameters:false});
+<div class="container">
+	<div id="pano" style="width:100%;height:100%;"></div>
+	<div id="overlay">
+		<button onclick="addSnowPlugin()">add snow plugin</button>
+		<button onclick="removeSnowPlugin()">remove snow plugin</button>
+		<button onclick="pano.autorotate.start()">rotate</button>
+		<button onclick="pano.autorotate.stop()">stop</button>
+		<button onclick="setGridPreview()">show grid</button>
+		<button onclick="setImagePreview()">show preview</button>
+	</div>
+</div>
 
-		var pano;
-		var panoName = 'p1';
 
-		krShell.ready(panoName, function (instance) {
-			pano = instance;
-			createScene();
-			setContextMenu();
-			addDraggbleHotspot();
+<script>
+	embedpano({xml:"krpano.xml", target:"pano", html5:"auto", mobilescale:1.0, passQueryParameters:false});
 
-			addSnowPlugin();
+	var pano;
+	var panoName = 'p1';
+
+	krShell.ready(panoName, function (instance) {
+		pano = instance;
+		createScene();
+		setContextMenu();
+		addDraggbleHotspot();
+
+		// addSnowPlugin();
+	});
+
+	function addSnowPlugin () {
+		var layer = new krShell.Layer('snow', {
+			url: 'snow.js'
 		});
 
-		function addSnowPlugin () {
-			var layer = new krShell.Layer('snow', {
-				url: 'snow.js'
+		pano.addLayer(layer);
+		layer.on('loaded', function () {
+			console.log('loaded');
+			layer.setPluginParams({
+				mode: 'image',
+				imageurl: 'hotspot.png',
+				flakes: 500,
+				floor: 1
 			});
+		});
+	}
 
-			pano.addLayer(layer);
-			layer.on('loaded', function () {
-				console.log('loaded');
-				layer.setPluginParams({
-					mode: 'image',
-					imageurl: 'hotspot.png',
-					flakes: 500,
-					floor: 1
-				});
-			});
-		}
+	function removeSnowPlugin () {
+		pano.removeLayer('snow');
+	}
 
-		function testLoadPlugin () {
-			pano.loadPlugin('t', 'test-plugin.js', {value: 111}, function() {this.dosomething()})
-		}
+	function testLoadPlugin () {
+		pano.loadPlugin('t', 'test-plugin.js', {value: 111}, function() {this.dosomething()})
+	}
 
-		function testExpectedScene () {
-			var s = new krShell.Scene();
-			// new krShell.Scene({
-			// 		preview: {
-			//			url: ''
-			// 		},
-			//		view: {},
-			//		image: {}
-			// });
+	function testExpectedScene () {
+		var s = new krShell.Scene();
+		// new krShell.Scene({
+		// 		preview: {
+		//			url: ''
+		// 		},
+		//		view: {},
+		//		image: {}
+		// });
 
-			s.preview = {};
-			s.view = {};
-			s.image = {};
+		s.preview = {};
+		s.view = {};
+		s.image = {};
 
-			pano.addScene(s);
+		pano.addScene(s);
 
-			s.preview.type = '';
-			pano.loadScene(s.name);
+		s.preview.type = '';
+		pano.loadScene(s.name);
 
-			s.view.hLookAt = 10;
-		}
+		s.view.hLookAt = 10;
+	}
 
-		function createScene () {
-			var s1 = new krShell.Scene('s1', {
-				preview: {
-					url: 'http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/preview.jpg'
-				},
-				image: {
-					type: 'CUBE',
-					url: 'http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/mobile_%s.jpg'
-				}
-			});
-			var s2 = new krShell.Scene('s2', {
-				preview: {
-					type: krShell.PREVIEW_TYPE.grid()
-				}
-			});
-
-			pano.addScene(s1);
-			pano.addScene(s2);
-			pano.loadScene('s1');
-		}
-
-		function setContextMenu () {
-			pano.contextMenu.items = [{
-				caption: 'start rotate',
-				onclick: function () {
-					pano.autorotate.start();
-				}
-			}, {
-				caption: 'stop rotate',
-				onclick: function () {
-					pano.autorotate.stop();
-				}
-			}, {
-				caption: 'set image preview',
-				onclick: setImagePreview
-			}, {
-				caption: 'set grid preview',
-				onclick: setGridPreview
-			}, {
-				caption: 'set image',
-				onclick: setImage
-			}];
-		}
-
-		function addDraggbleHotspot () {
-			var h = new krShell.Hotspot('draghotspot', {
-				url: 'hotspot.png',
-				keep: true,
-				ath: 0,
-				atv: 0
-			});
-
-			pano.addHotspot(h);
-
-			h.on('down', function (event) {
-				var center = pano.sphereToScreen(h.ath, h.atv);
-				var targetX = event.stagex - center.x;
-				var targetY = event.stagey - center.y;
-
-				krShell.asyncLoop(function () {
-					return h.pressed;
-				}, function () {
-					var x = event.stagex - targetX;
-					var y = event.stagey - targetY;
-					var result = pano.screenToSphere(x, y);
-					h.ath = result.x;
-					h.atv = result.y;
-				});
-			});
-		}
-
-		function setImagePreview () {
-			pano.currentScene.image = null;
-			pano.currentScene.preview.type = '';
-			pano.currentScene.preview.url = 'http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/preview.jpg';
-			pano.currentScene.load();
-		}
-
-		function setGridPreview () {
-			pano.currentScene.image = null;
-			pano.currentScene.preview.url = '';
-			pano.currentScene.preview.type = krShell.PREVIEW_TYPE.grid();
-			pano.currentScene.load();
-		}
-
-		function setImage () {
-			pano.currentScene.image = {
-				type: krShell.IMAGE_TYPE.CUBE,
+	function createScene () {
+		var s1 = new krShell.Scene('s1', {
+			preview: {
+				//type: 'CUBESTRIP',
+				url: 'http://pano9.qncdn.720static.com/resource/prod/171i1da9a82/bfe2awru9ca/1285978/imgs/preview.jpg',
+				//url: 'http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/preview.jpg'
+				url: 'http://demo.jackyang.me/images/pano-images/Monp_preview.jpg'
+			},
+			/*image: {
+				type: 'CUBE',
 				url: 'http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/mobile_%s.jpg'
-			};
-			pano.currentScene.load();
-		}
-	</script>
-</div>
+			}*/
+		});
+		var s2 = new krShell.Scene('s2', {
+			preview: {
+				type: krShell.PREVIEW_TYPE.grid()
+			}
+		});
 
-<div id="pano2" style="width:100%;height:50%;">
-	<noscript><table style="width:100%;height:100%;"><tr style="vertical-align:middle;text-align:center;"><td>ERROR:<br><br>Javascript not activated<br><br></td></tr></table></noscript>
-	<script>
-		embedpano({xml:"krpano2.xml", target:"pano2", html5:"auto", mobilescale:1.0, passQueryParameters:false});
+		pano.addScene(s1);
+		pano.addScene(s2);
+		pano.loadScene('s1');
+	}
 
-		 krShell.ready('p2', function (instance) {
-			 var scene = new krShell.Scene('s1', {
-				preview: {
-					url: 'http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/preview.jpg'
-				}
-			 });
-			 instance.addScene(scene);
-			 instance.loadScene('s1');
-		 });
-	</script>
-</div>
+	function setContextMenu () {
+		pano.contextMenu.items = [{
+			caption: 'start rotate',
+			onclick: function () {
+				pano.autorotate.start();
+			}
+		}, {
+			caption: 'stop rotate',
+			onclick: function () {
+				pano.autorotate.stop();
+			}
+		}, {
+			caption: 'set image preview',
+			onclick: setImagePreview
+		}, {
+			caption: 'set grid preview',
+			onclick: setGridPreview
+		}, {
+			caption: 'set image',
+			onclick: setImage
+		}];
+	}
 
+	function addDraggbleHotspot () {
+		var h = new krShell.Hotspot('draghotspot', {
+			url: 'hotspot.png',
+			keep: true,
+			ath: 0,
+			atv: 0
+		});
+
+		pano.addHotspot(h);
+
+		h.on('down', function (event) {
+			var center = pano.sphereToScreen(h.ath, h.atv);
+			var targetX = event.stagex - center.x;
+			var targetY = event.stagey - center.y;
+
+			krShell.asyncLoop(function () {
+				return h.pressed;
+			}, function () {
+				var x = event.stagex - targetX;
+				var y = event.stagey - targetY;
+				var result = pano.screenToSphere(x, y);
+				h.ath = result.x;
+				h.atv = result.y;
+			});
+		});
+	}
+
+	function setImagePreview () {
+		pano.currentScene.image = null;
+		pano.currentScene.preview.type = '';
+		pano.currentScene.preview.url = 'http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/preview.jpg';
+		pano.currentScene.load();
+	}
+
+	function setGridPreview () {
+		pano.currentScene.image = null;
+		pano.currentScene.preview.url = '';
+		pano.currentScene.preview.type = krShell.PREVIEW_TYPE.grid();
+		pano.currentScene.load();
+	}
+
+	function setImage () {
+		pano.currentScene.image = {
+			type: krShell.IMAGE_TYPE.CUBE,
+			url: 'http://pano10.qncdn.720static.com/resource/prod/58ci8e397n6/1d42fxagxen/1197790/imgs/mobile_%s.jpg'
+		};
+		pano.currentScene.load();
+	}
+</script>
 </body>
 </html>
